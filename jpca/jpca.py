@@ -9,12 +9,14 @@ from sklearn.decomposition import PCA
 from math import sqrt
 from scipy import optimize
 
+
 def jpca(X, k=6):
     X_red, _ = pca_preproc(X, k)
     X_prestate = X_red[:-1,]
     # get discrete derivative of X_red w.r.t time (subtract adjacent rows)
     dX = np.diff(X_red, axis=0)
-
+    m_skew = fit_skew(X_prestate, dX)
+    M_skew = vec2vec2mat(m_skew)
 
 
 
@@ -31,6 +33,9 @@ def fit_skew(X_prestate, dX):
     M0, _, _, _ = np.linalg.lstsq(X_prestate, dX, rcond=None)
     M0_skew = .5*(M0 - M0.T)
     m_skew = mat2vec(M0_skew)
+    opt = optimize_skew(m_skew, X_prestate, dX)
+    return opt.x
+
 
 def optimize_skew(m_skew, X_prestate, dX):
     def objective(x, X_prestate, dX):
