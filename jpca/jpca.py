@@ -66,7 +66,7 @@ def get_jpc_pairs(M_skew):
         conj_pair = (v1, v2)
         jpcs = get_real_projection_vecs(conj_pair)
         jpc_pairs.append(jpcs)
-    return jpc_pairs
+    return jpc_pairs, evals
 
 
 def get_real_projection_vecs(conj_pair, evals=None):
